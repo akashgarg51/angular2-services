@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
+import {LogService} from './log.service';
+import {DataService} from './data.service';
 
 @Component({
     selector: 'si-cmp-b',
@@ -7,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
       <input type="text" #input>
       <button (click)="onLog(input.value)">Log</button>
       <button (click)="onStore(input.value)">Store</button>
+      <button (click)="onSend(input.value)">Send</button>
     </div>
     <hr>
     <div>
@@ -18,22 +21,31 @@ import { Component, OnInit } from '@angular/core';
         <h3>Received Value</h3>
         <p>{{value}}</p>
     </div>
-  `
+  `,
+   providers: [LogService]
 })
-export class CmpBComponent implements OnInit {
+export class CmpBComponent{
     value = '';
     items: string[] = [];
+    
+    constructor(private logService: LogService, private dataService: DataService){
+        
+    }
 
     onLog(value: string) {
+         this.logService.writeToLog(value);
     }
 
     onStore(value: string) {
+         this.dataService.addData(value);
     }
 
     onGet() {
+         this.items = this.dataService.getData().slice(0);  //As with slice we are creating a new array everytime, 
+        //if we want to click on refresh, to see the updated list
     }
 
-    ngOnInit() {
-
+    onSend(value: string) {
+   
     }
 }

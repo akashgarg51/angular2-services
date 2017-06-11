@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {LogService} from './log.service'
+import {DataService} from './data.service'
 
 @Component({
     selector: 'si-cmp-a',
@@ -19,22 +21,28 @@ import { Component } from '@angular/core';
         <h3>Received Value</h3>
         <p>{{value}}</p>
     </div>
-  `
+  `,
+    providers: [LogService]
 })
 export class CmpAComponent {
     value = '';
     items: string[] = [];
+    
+    constructor(private logService: LogService, private dataService: DataService){
+        
+    }
 
     onLog(value: string) {
-  
+         this.logService.writeToLog(value);
     }
 
     onStore(value: string) {
- 
+         this.dataService.addData(value);
     }
 
     onGet() {
- 
+         this.items = this.dataService.getData().slice(0);  //As with slice we are creating a new array everytime, 
+        //if we want to click on refresh, to see the updated list
     }
 
     onSend(value: string) {
